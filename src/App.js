@@ -1,48 +1,33 @@
-import styles from './App.module.css'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
-function Hello() {
-  useEffect(() => {
-
-    console.log('I\'m here!')
-    // cleanup function 컴포넌트가 제거 될 때 호출된다.
-    return () => console.log('destroyed')
-  }, [])
-  return <h1>Hello</h1>
-}
 function App() {
-  const [counter, setValue] = useState(0)
-  const [keyword, setKeyword] = useState("")
-  const onClick = () => setValue(prev => prev + 1)
-  const onChange = (event) => setKeyword(event.target.value)
-  useEffect(() => {
-    console.log('i run only once')
-  }, [])
+  const [toDo, setTodo] = useState("")
+  const [toDos, setTodos] = useState([])
+  const onChange = (event) => {
+    setTodo(event.target.value)
+  }
 
-  useEffect(() => {
-    console.log('i run when \'keyword\' changes')
-  }, [keyword])
-
-  useEffect(() => {
-    console.log('i run when \'counter\' changes')
-  }, [counter])
-
-  const [showing, setShowing] = useState(false)
-  const onClick2 = () => setShowing(prev => !prev)
+  const onSubmit = (event) => {
+    event.preventDefault()
+    if (toDo === '') {
+      return
+    }
+    setTodos(currentArry => [toDo, ...currentArry])
+    setTodo('')
+  }
+  console.log(toDos)
   return (
     <div>
-      <input
-        type="text"
-        value={keyword}
-        onChange={onChange}
-        placeholder="Search here..."
-      />
-      <h1 className={styles.title}>{counter}</h1>
-      <button onClick={onClick}>Click me</button>
-      <hr/>
-      {/*{showing ? <Hello/> : null}*/}
-      {showing && <Hello/>}
-      <button onClick={onClick2}>{showing ? "Hide" : "Show"}</button>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          value={toDo}
+          onChange={onChange}
+          placeholder="Whrite your to do..."
+        />
+        <button>Add To Do</button>
+      </form>
     </div>
   )
 }
